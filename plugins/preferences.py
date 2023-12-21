@@ -74,7 +74,7 @@ def check_config():
 
 	if config_path.exists():
 		return verify_config(config_path)
-	else
+	else:
 		# !! + error log
 		return False
 

@@ -1,4 +1,6 @@
 import os
+import logging
+
 import plugins.preferences as config
 import plugins.style as style
 
@@ -14,11 +16,11 @@ def setup_data(app_data):
 
 
 def get_config_data(config_path):
-	if config.check_config() == True
+	if config.check_config() == True:
 		return config.read_config(config_path)
-	else
+	else:
 		print("No config found. Let's make a new one!")
-		ask_auto(configs)
+		ask_auto(config_path)
 
 # Create user set directories
 def setup_dirs(configs):
@@ -37,9 +39,9 @@ def setup_dirs(configs):
 # Setup directories via menu and ask to auto-create the directories or not
 def ask_auto(config_path):
 	while True:
-		ask = 'y' # Default
-		ask = input("Would you like pyButler to create the directories you setup here? Y/n: ").lower()
-		if ask in ['yes', 'y']:
+		bold_y = f"{style.bold(style.blue('Y'))}" # Default
+		ask = input(f"Would you like pyButler to create the directories you setup here? {bold_y}/n: ").lower()
+		if ask in ['yes', 'y', '']:
 			configs = config.create_config(config_path)
 			print_configs(configs)
 			setup_dirs(configs)
@@ -100,7 +102,6 @@ def print_configs(configs):
     print(f"{source_msg}\n{movie_msg}\n{shows_msg}\n{books_msg}")
 
 
-# first thing to do is to fetch the app_dir from configs
 app_dir = config.get_app_dir()
 
 # set supplimentary data directory (for logs and env) & create it
@@ -110,9 +111,10 @@ setup_data(app_data)
 # fetch env path
 auth = config.get_env(app_dir)
 
-# next is to read & check the configs
+# next, read & check the configs
 config_path = config.get_config(app_dir)
-configs = get_config_data(config_path)
+get_config_data(config_path)
+
 
 # set config path vars for easier syntax
 source = configs['source']

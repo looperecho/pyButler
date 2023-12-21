@@ -48,7 +48,7 @@ def clear_line():
     print(end=clear)
 
 
-if __name__ == '__main__':
+def test():
     Option = input("Please run 'butler.py'\nPress 'Enter' to run a color test... ")
     print(blue("This message is Blue"))
     print(green("This message is Green"))
@@ -57,3 +57,6 @@ if __name__ == '__main__':
     print(magenta("This message is Magenta"))
     print(dark_grey("This message is Dark Grey"))
     print(dark("This message is Dark"))
+
+if __name__ == '__main__':
+    pass
