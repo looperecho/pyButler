@@ -65,9 +65,18 @@ def verify_config(config_path):
 			json.load(file)
 			return True
 		except json.JSONDecodeError:
-			# Add logging statement here
+			# !! + error log
 			return False
 		
+def check_config():
+	app_dir = get_app_dir()
+	config_path = get_config(app_dir)
+
+	if config_path.exists():
+		return verify_config(config_path)
+	else
+		# !! + error log
+		return False
 
 if __name__ == '__main__':
 	pass
