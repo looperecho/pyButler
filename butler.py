@@ -10,33 +10,36 @@ import requests
 from dotenv import load_dotenv, set_key
 
 from plugins import style, movie, show, audiobook
-import plugins.path_setup as path
-import plugins.preferences as config
+from plugins import path_setup as path
+from plugins import preferences as config
 
+
+def welcome_message():
+    print("WELCOME")
 
 def setup_logging():
-	coloredlogs.install(level="INFO", logger=logging.getLogger(), fmt="%(levelname)s: %(message)s")
+    coloredlogs.install(level="INFO", logger=logging.getLogger(), fmt="%(levelname)s: %(message)s")
 
-	# console log setup
-	console_handler = logging.StreamHandler()
-	console_handler.setLevel(logging.INFO)
+    # console log setup
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
 
-	# file logs setup
-	file_handler = logging.FileHandler(os.path.join(path.app_data, 'log_errors.log'))
-	file_handler.setLevel(logging.ERROR)
-	file_formatter = logging.Formatter("---\n%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
-	file_handler.setFormatter(file_formatter)
+    # file logs setup
+    file_handler = logging.FileHandler(os.path.join(path.app_dir, 'log_errors.log'))
+    file_handler.setLevel(logging.ERROR)
+    file_formatter = logging.Formatter("---\n%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
+    file_handler.setFormatter(file_formatter)
 
-	# call logger
-	logging.getLogger().addHandler(file_handler)
+    # call logger
+    logging.getLogger().addHandler(file_handler)
 
-	return logging
+    return logging
 
 
 def create_api():
     # check if .env file exists
-    if not os.path.exists(path.auth):
-        with open(path.auth, "w"):
+    if not os.path.exists(config.get_env_path()):
+        with open(config.get_env_path(), "w"):
             logging.warning("TMDB API key not found...")
         input_api()
 
@@ -46,19 +49,19 @@ def create_api():
 
 
 def input_api():
-    load_dotenv(path.auth)
+    load_dotenv(config.get_env_path())
     os.environ["TMDB_API_KEY"] = input("Input a valid TMDB API key: ")
-    set_key(path.auth, "TMDB_API_KEY", os.environ["TMDB_API_KEY"])
+    set_key(config.get_env_path(), "TMDB_API_KEY", os.environ["TMDB_API_KEY"])
 
 
 def read_api():
-    load_dotenv(path.auth)
+    load_dotenv(config.get_env_path())
     api_key = os.environ.get("TMDB_API_KEY")
     return api_key
 
 
 def check_api_file():
-    load_dotenv(path.auth)
+    load_dotenv(config.get_env_path())
 
     try:
         api_key = os.environ.get("TMDB_API_KEY")
@@ -149,11 +152,9 @@ def process_file(file_path, api_key):
 
 def main():
     logging = setup_logging()
-    path.main_setup()
     api_key = check_api_key()
     welcome_message()
 
-    path.print_configs()
     input(f"\nPress {style.bold('ENTER')} to start...")
     count = 0
 
