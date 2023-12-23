@@ -10,8 +10,8 @@ import requests
 from dotenv import load_dotenv, set_key
 
 from plugins import style, movie, show, audiobook
-from plugins import path_setup as path
-from plugins import preferences as config
+from plugins import preferences_directories as path
+from plugins import preferences_config as config
 
 
 def welcome_message():

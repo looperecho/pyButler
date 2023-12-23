@@ -7,7 +7,7 @@ from datetime import timedelta
 import requests_cache
 from dotenv import load_dotenv, set_key
 
-import plugins.path_setup as path
+import plugins.preferences_directories as path
 import plugins.style as style
 
 

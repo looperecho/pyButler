@@ -3,6 +3,12 @@ import os
 import plugins.preferences as config
 import plugins.style as style
 
+# return the path of config.json
+def config_file():
+    app_dir = app() # Get the Application Support directory of pyButler.
+    config_path = app_dir / 'config.json'
+    return config_path
+
 
 def get_config_data(config_path):
     if config.check_config() == True:
