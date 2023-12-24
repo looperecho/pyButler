@@ -27,27 +27,25 @@ def config_file():
     return config_path
 
 
+def auth_file():
+    app_dir = app()
+    auth_path = app_dir / '.env'
+    return auth_path
 
-# def get_config_data(config_path):
-#     if config.check_config() == True:
-#         return config.read_config(config_path)
-#     else:
-#         print("No config found. Let's make a new one!")
-#         ask_auto(config_path)
 
-# # Create user set directories
-# def setup_dirs(configs):
-#     dir_names = ['source', 'movie', 'show', 'audiobook']
+# Create user set directories
+def setup_dirs(configs):
+    dir_names = ['source', 'movie', 'show', 'audiobook']
     
-#     for dir_name in dir_names:
-#         dir_path = configs[dir_name]
-#         try:
-#             os.mkdir(dir_path)
-#         except FileExistsError:
-#             exist_msg = f"Directory exists! {dir_path}"
-#             print(f"{style.dark(exist_msg)}")
-#         else:
-#             print(f"Directory created → {dir_path}")
+    for dir_name in dir_names:
+        dir_path = configs[dir_name]
+        try:
+            os.mkdir(dir_path)
+        except FileExistsError:
+            exist_msg = f"Directory exists! {dir_path}"
+            print(f"{style.dark(exist_msg)}")
+        else:
+            print(f"Directory created → {dir_path}")
 
 # # Setup directories via menu and ask to auto-create the directories or not
 # def ask_auto():

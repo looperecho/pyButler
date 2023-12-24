@@ -3,48 +3,48 @@ from termcolor import colored
 
 # Colors
 def blue(msg):
-    msg = colored(msg, "blue")
+    msg = colored(msg, 'blue')
     return msg
 
 
 def green(msg):
-    msg = colored(msg, "green")
+    msg = colored(msg, 'green')
     return msg
 
 
 def yellow(msg):
-    msg = colored(msg, "yellow")
+    msg = colored(msg, 'yellow')
     return msg
 
 
 def red(msg):
-    msg = colored(msg, "red")
+    msg = colored(msg, 'red')
     return msg
 
 
 def magenta(msg):
-    msg = colored(msg, "magenta")
+    msg = colored(msg, 'magenta')
     return msg
 
 
 def dark_grey(msg):
-    msg = colored(msg, "dark_grey")
+    msg = colored(msg, 'dark_grey')
     return msg
 
 
 # Styles
 def bold(msg):
-    msg = colored(msg, attrs=["bold"])
+    msg = colored(msg, attrs=['bold'])
     return msg
 
 
 def dark(msg):
-    msg = colored(msg, attrs=["dark"])
+    msg = colored(msg, attrs=['dark'])
     return msg
 
 
-def clear_line():
-    clear = "\x1b[2K"
+def clear_line(): # use after: print("content", end='\r')
+    clear = '\x1b[2K'
     print(end=clear)
 
 
@@ -59,4 +59,4 @@ def test():
     print(dark("This message is Dark"))
 
 if __name__ == '__main__':
-    pass
+    test()
