@@ -7,8 +7,8 @@ from datetime import timedelta
 import requests_cache
 from dotenv import load_dotenv, set_key
 
-import plugins.preferences_directories as path
-import plugins.style as style
+import plugins.preferences_paths as path
+import plugins.style.style as style
 
 '''Process a Movie file'''
 #   This can be called from another script with the args.
