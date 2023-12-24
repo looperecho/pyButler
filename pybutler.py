@@ -9,7 +9,10 @@ import coloredlogs
 import requests
 from dotenv import load_dotenv, set_key
 
-
+from preferences import paths, config, style
+from plugins.movie import movie
+from plugins.show import show
+from plugins.audiobook import audiobook
 
 
 def welcome_message():
@@ -23,7 +26,7 @@ def setup_logging():
     console_handler.setLevel(logging.INFO)
 
     # file logs setup
-    file_handler = logging.FileHandler(os.path.join(path.app_dir, 'log_errors.log'))
+    file_handler = logging.FileHandler(os.path.join(paths.app(), 'log_errors.log'))
     file_handler.setLevel(logging.ERROR)
     file_formatter = logging.Formatter("---\n%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
     file_handler.setFormatter(file_formatter)
@@ -114,7 +117,7 @@ def check_file(new_path):
         print(f"{success} {msg} → {location} → {filename}")
 
 # MAIN FUNCTION - Call from another script using the args
-def process_file(file_path, api_key):
+def process_file(file_path, api_key, prefs):
     file_name = os.path.basename(file_path)
     extension = os.path.splitext(file_path)[1]
     pattern = re.search("(?i)(S(\d+))(E(\d+))", file_name, re.IGNORECASE)
@@ -125,7 +128,7 @@ def process_file(file_path, api_key):
 
     elif extension == '.m4b':
         try:
-            new_path = audiobook.process(file_path, path.books)
+            new_path = audiobook.process(file_path, book_path=prefs.configs['audiobook'])
             move_file(file_path, new_path)
         except UnboundLocalError:
             logging.info("Skipping file...")
@@ -133,7 +136,7 @@ def process_file(file_path, api_key):
         
     elif pattern is not None:
         try:
-            new_path = show.process(file_path, api_key)
+            new_path = show.process(file_path, api_key, show_path=prefs.configs['show'])
             move_file(file_path, new_path)
         except UnboundLocalError:
             logging.info("Skipping file...")
@@ -141,7 +144,7 @@ def process_file(file_path, api_key):
         
     else:
         try:
-            new_path = movie.process(file_path, api_key)
+            new_path = movie.process(file_path, api_key, movie_path=prefs.configs['movie'])
             move_file(file_path, new_path)
         except UnboundLocalError:
             logging.info("Skipping file...")
@@ -149,20 +152,26 @@ def process_file(file_path, api_key):
 
 
 def main():
+    api = config.Auth()
+    prefs = config.Config()
     logging = setup_logging()
-    api_key = check_api_key()
+
+
+    source = prefs.configs['source']
+    print(source)
+
     welcome_message()
 
     input(f"\nPress {style.bold('ENTER')} to start...")
     count = 0
 
-    for file in os.listdir(path.source):
-        file_path = os.path.join(path.source, file)
+    for file in os.listdir(prefs.configs['source']):
+        file_path = os.path.join(prefs.configs['source'], file)
         extension = extension = os.path.splitext(file)[1]
         
         if extension == '.mkv' or extension == '.mp4' or extension =='.m4b':
             print (f"\nFile: {style.bold(style.dark_grey(file))}")
-            process_file(file_path, api_key)
+            process_file(file_path, api.key, prefs)
             count += 1
             
         else:

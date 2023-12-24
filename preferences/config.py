@@ -1,28 +1,23 @@
 import json
-import logging
 import os
 from pathlib import Path
 
 import requests
 from dotenv import load_dotenv, set_key
 
-from preferences import paths
-from preferences import style
+from preferences import paths, style
+
 
 class Config:
     def __init__(self, config_file=paths.config_file()):
         self.config_file = config_file
         self.configs = self.load()
 
-
     def load(self):
-        if self.validate() == True: # Check the contents first
-            print("config check OK!")
+        if self.validate(): # Check the contents first
             with open(self.config_file, 'r') as file:
                 valid_configs = json.load(file)
                 return valid_configs
-        else:
-            self.create()
 
 
     def validate(self):
@@ -31,22 +26,32 @@ class Config:
                 with open(self.config_file, 'r') as file:
                     temp_configs = json.load(file)
                     for key, directory in temp_configs.items():
-                        if key is not Path(directory).is_dir():
-                            e = f"{key} directory does not exist or is not valid: "
+                        while not os.path.isdir(directory):
+                            e = f"{key} directory does not exist or is not valid: {directory}"
                             logging.error(e)
-                        else:
-                            return True
+
+                            new_directory = input(f"Please enter a valid directory for {key}: ")
+                            temp_configs[key] = new_directory
+                            directory = new_directory
+                            logging.info(f"Updated {key} to: {new_directory}")
+                    
+                    self.write(temp_configs)
+
+                    print(style.green("Config check: OK!"))
+                    return True
 
             except json.JSONDecodeError:
                 e = "Unable to read the contents of the config file"
                 logging.error(e)
-            except FileNotFoundError:
-                e = "Config file not found"
-                logging.error(e)
+                return False
             except Exception as e:
                 e = f"Unexpected error: {e}"
                 logging.error(e)
-            return False
+                return False
+        else:
+            e = "No config file found"
+            logging.error(e)
+            self.create()
 
 
     def write(self, configs):
@@ -55,8 +60,7 @@ class Config:
 
 
     def create(self):
-        print("No config file, let's create a new one!")
-
+        print("Let's setup a new config file...")
         source_dir = input("Source folder: ")
         movie_dir = input("Movie target folder: ")
         show_dir = input("TV Show target folder: ")
@@ -95,8 +99,8 @@ class Auth:
     def load(self):
         if self.validate() == True:
             load_dotenv(self.auth_file)
-            key = os.environ.get('tmdb_api_key')
-            return key
+            valid_key = os.environ.get('tmdb_api_key')
+            return valid_key
 
 
     def validate(self):

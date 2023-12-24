@@ -5,15 +5,11 @@ import re
 from datetime import timedelta
 
 import requests_cache
-from dotenv import load_dotenv, set_key
-
-import plugins.preferences_paths as path
-import plugins.style.style as style
 
 
 '''Process a TV Show File'''
 #   This can be called from another script with the args.
-def process(file_path, api_key):
+def process(file_path, api_key, show_path):
     file_name = os.path.basename(file_path)
     ext = get_file_extension(file_name)
 
@@ -21,11 +17,10 @@ def process(file_path, api_key):
     try:
         show_name, show_year, season_num, episode_num, episode_title = get_show_info(file_name, api_key)
     except TypeError:
-        style.clear_line()
         logging.error(f"Show information returned no results. Please check the title and year is correct.")
     else:
         # Create dirs and rename file
-        season_dir = create_show_dirs(show_name, show_year, season_num)
+        season_dir = create_show_dirs(show_name, show_year, season_num, show_path)
         new_file_name = rename_show_file(show_name, season_num, episode_num, episode_title, ext)
 
         # move the file to new location
@@ -64,7 +59,6 @@ def get_show_name(file_name):
         show_name = (show_name_search.group(1)).strip()
 
     else:
-        style.clear_line()
         logging.error("Unable to parse show title from file name.")
     
     # Check for dots and replace
@@ -168,9 +162,9 @@ def get_episode_title(show_id, season_num, episode_num, api_key):
 
 #   Create the show directories. 
 #   We do not need to return the show_dir itself as it's part of the season_dir path
-def create_show_dirs(show_name, show_year, season_num):
+def create_show_dirs(show_name, show_year, season_num, show_path):
     show_dir_name = f"{show_name} ({show_year})"
-    show_dir = os.path.join(path.shows, show_dir_name)
+    show_dir = os.path.join(show_path, show_dir_name)
 
     season_dir_name = f"Season {season_num}"
     season_dir = os.path.join(show_dir, season_dir_name)

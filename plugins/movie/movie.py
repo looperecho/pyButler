@@ -5,14 +5,11 @@ import re
 from datetime import timedelta
 
 import requests_cache
-from dotenv import load_dotenv, set_key
 
-import plugins.preferences_paths as path
-import plugins.style.style as style
 
 '''Process a Movie file'''
 #   This can be called from another script with the args.
-def process(file_path, api_key):
+def process(file_path, api_key, movie_path):
     file_name = os.path.basename(file_path)
     ext = get_file_extension(file_name)
     
@@ -20,13 +17,12 @@ def process(file_path, api_key):
     try:
         movie_name, movie_year = get_movie_info(file_name, api_key)
     except TypeError:
-        style.clear_line()
         logging.error("Movie information returned no results. Please check the title and year is correct.")
     else:
         new_file_name = rename_movie_file(movie_name, movie_year, ext)
         
         # move the file to new location
-        new_path = os.path.join(path.movies, new_file_name)
+        new_path = os.path.join(movie_path, new_file_name)
         return new_path
 
 
@@ -50,7 +46,6 @@ def get_movie_name(file_name):
     if year_match:
         movie_year = year_match[-1]
     else:
-        style.clear_line()
         logging.error("Unable to parse movie year from file name.")
 
     if movie_year:
@@ -62,10 +57,8 @@ def get_movie_name(file_name):
             movie_name = movie_name_match.group(1).replace(".", " ")
             return movie_name, movie_year
         else:
-            style.clear_line()
             logging.error("Unable to parse movie name from file name.")
     else:
-        style.clear_line()
         logging.error(f"Unable to continue for {file_name}.")
 
 
