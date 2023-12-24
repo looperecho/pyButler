@@ -2,9 +2,6 @@ import os
 from pathlib import Path
 from sys import platform
 import sys
-print('\n\n')
-print(sys.path)
-print('\n\n')
 
 def app():
     if platform == 'linux': # Linux

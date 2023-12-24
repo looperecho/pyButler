@@ -6,8 +6,8 @@ print('\n\n')
 print(sys.path)
 print('\n\n')
 
-import plugins.preferences_paths.preferences_paths as paths
-import plugins.style.style as style
+from preferences import paths
+from preferences import style
 
 class Config:
     def __init__(self, config_file=paths.config_file()):

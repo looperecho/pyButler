@@ -9,10 +9,6 @@ import coloredlogs
 import requests
 from dotenv import load_dotenv, set_key
 
-from plugins.preferences_paths import preferences_paths as paths
-from plugins.preferences_config import preferences_config as config
-from plugins.style import style
-
 
 def welcome_message():
     print("WELCOME")
