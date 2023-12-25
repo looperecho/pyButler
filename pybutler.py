@@ -2,6 +2,7 @@ import os
 import logging
 import re
 import shutil
+import sys
 
 import coloredlogs
 import requests
@@ -21,6 +22,11 @@ def welcome_message():
     card = f"{logo_art}\nv{version}\n{tagline}{hr}"
     print(card)
 
+def warn():
+    message = style.yellow("! pyButler will perform file operations that include moving and renaming compatable files. It's advisable to have a backup.")
+    compatable = "Compatable Files: .mkv, .mp4, & .m4b"
+    warning_message = f"\n{message}\n{compatable}\n"
+    print(warning_message)
 
 def setup_logging():
     coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s: %(message)s")
@@ -101,41 +107,48 @@ def process_file(file_path, api_key, configs):
 
 
 def main():
-    # Setup Logging
-    logger = setup_logging()
+    try:
+        # Warning message
+        warn()
 
-    # Setup TMDB API Key
-    api = config.Auth()
+        # Setup Logging
+        logger = setup_logging()
 
-    # Setup config / paths to directories
-    prefs = config.Config()
+        # Setup TMDB API Key
+        api = config.Auth()
 
-    # Read the directories
-    configs = prefs.read()
-    
-    welcome_message()
-    prefs.display()
+        # Setup config / paths to directories
+        prefs = config.Config()
 
-    input(f"\nPress {style.bold('ENTER')} to start...")
-    count = 0
+        # Read the directories
+        configs = prefs.read()
+        welcome_message()
+        prefs.display()
 
-    for file in os.listdir(configs['source']):
-        file_path = os.path.join(configs['source'], file)
-        extension = extension = os.path.splitext(file)[1]
-        
-        if extension == '.mkv' or extension == '.mp4' or extension =='.m4b':
-            print (f"\nFile: {style.bold(style.dark_grey(file))}")
-            process_file(file_path, api.key, configs)
-            count += 1
+        enter = style.bold("ENTER")
+        input(f"\nPress {enter} to start...")
+        count = 0
+
+        for file in os.listdir(configs['source']):
+            file_path = os.path.join(configs['source'], file)
+            extension = extension = os.path.splitext(file)[1]
             
+            if extension == '.mkv' or extension == '.mp4' or extension =='.m4b':
+                print (f"\nFile: {style.bold(style.dark_grey(file))}")
+                process_file(file_path, api.key, configs)
+                count += 1
+                
+            else:
+                pass
+
+        if count < 1:
+            logger.info("No valid files were found!")
         else:
-            pass
-
-    if count < 1:
-        logger.info("No valid files were found!")
-    else:
-        print(f"\n{style.blue('Complete.')}")
-
+            print(f"\n{style.blue('Complete.')}")
+    except KeyboardInterrupt:
+            print('')
+            logger.info("pyButler interrupted by user. Exiting app..")
+            sys.exit(0)
 
 #   Solo Run.
 if __name__ == "__main__":
