@@ -22,7 +22,7 @@ pyButler is a Python command line application designed for the automatic organiz
 > ⚠️ You **will** need a TMDB API key. You can obtain one from the [TMDB website](https://developer.themoviedb.org/docs/getting-started).
 1. Clone the repo:
 ```bash
-git clone https://github.com/looperecho/pybutler.git
+git clone https://github.com/looperecho/pyButler.git
 ```
 2. Create a virtual environment and activate it (optional)
 ```bash
@@ -37,10 +37,12 @@ pip install -r requirements.txt
 ## Usage
 1. Run the python file:
 ```bash
-python /path/to/pybutler.py
+$ cd /path/to/pyButler  
+$ python pybutler.py
 ```
 2. Follow the on-screen prompts to input your TMDB API key and setup your directory preferences.
-3. pyButler will scan the source directory for supported file types, and do the rest!
+3. pyButler will scan the source directory for supported file types, and do the rest!  
+> Supported filetypes: `.mkv` `.mp4` `.m4b`
 
 ## Application Data & Configuration Files
 pyButler will create an application directory along with `config.json` and `.env` files to store your configurations. If you want to edit them at any time, they can be found at:
