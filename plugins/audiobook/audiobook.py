@@ -20,7 +20,7 @@ def remove_illegal_chars(tag_title):
 	return clean_title
 
 # Organise m4b files into dir structure: ...target/Author/Audiobookname.m4b
-def process(file_path, target):
+def process(file_path, book_path):
 	file = os.path.basename(file_path)
 
 	try:
@@ -38,7 +38,7 @@ def process(file_path, target):
 	except:
 		logger.error("Not a .mp4 file. Please check this is a real!")
 
-	author_folder = os.path.join(target, author)
+	author_folder = os.path.join(book_path, author)
 	if not os.path.exists(author_folder):
 		os.makedirs(author_folder)
 

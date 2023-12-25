@@ -111,9 +111,6 @@ def main():
         # Warning message
         warn()
 
-        # Setup Logging
-        logger = setup_logging()
-
         # Setup TMDB API Key
         api = config.Auth()
 
@@ -122,6 +119,8 @@ def main():
 
         # Read the directories
         configs = prefs.read()
+
+        # Display logo card
         welcome_message()
         prefs.display()
 
@@ -152,4 +151,6 @@ def main():
 
 #   Solo Run.
 if __name__ == "__main__":
+    # Setup Logging
+    logger = setup_logging()
     main()
