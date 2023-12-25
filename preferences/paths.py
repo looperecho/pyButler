@@ -5,13 +5,13 @@ from sys import platform
 
 def app():
     if platform == 'linux': # Linux
-        app_dir = Path.home() / '.config' / 'pybutler'
+        app_dir = Path.home() / '.config' / 'pyButler'
 
     elif platform == 'darwin': # macOS
-        app_dir = Path.home() / 'Library' / 'Application Support' / 'pybutler'
+        app_dir = Path.home() / 'Library' / 'Application Support' / 'pyButler'
 
     elif platform == 'win32': # Windows
-        app_dir = Path(os.getenv('APPDATA')) / 'pybutler'
+        app_dir = Path(os.getenv('APPDATA')) / 'pyButler'
 
     if os.path.exists(app_dir):
         return app_dir

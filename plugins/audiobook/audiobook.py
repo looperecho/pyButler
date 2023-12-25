@@ -1,12 +1,12 @@
 import os
 import re
 import logging
-import coloredlogs
 
 from mutagen.mp4 import MP4
+import coloredlogs
 
 
-coloredlogs.install(level="INFO", logger=logger, fmt="%(levelname)s: %(message)s")
+coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # Remove undesired term from title

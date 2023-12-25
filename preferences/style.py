@@ -48,8 +48,26 @@ def clear_line(): # use after: print("content", end='\r')
     print(end=clear)
 
 
+def logo():
+    logo_art = '''
+
+██████╗ ██╗   ██╗██████╗ ██╗   ██╗████████╗██╗     ███████╗██████╗ 
+██╔══██╗╚██╗ ██╔╝██╔══██╗██║   ██║╚══██╔══╝██║     ██╔════╝██╔══██╗
+██████╔╝ ╚████╔╝ ██████╔╝██║   ██║   ██║   ██║     █████╗  ██████╔╝
+██╔═══╝   ╚██╔╝  ██╔══██╗██║   ██║   ██║   ██║     ██╔══╝  ██╔══██╗
+██║        ██║   ██████╔╝╚██████╔╝   ██║   ███████╗███████╗██║  ██║
+╚═╝        ╚═╝   ╚═════╝  ╚═════╝    ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝'''
+    logo_art = blue(logo_art)
+    return logo_art
+
+def hr():
+    hr = "\n───────────────────────────────────────────────────────────────────\n"
+    hr = blue(hr)
+    return hr
+
 def test():
     Option = input("Please run 'butler.py'\nPress 'Enter' to run a color test... ")
+    print(logo())
     print(blue("This message is Blue"))
     print(green("This message is Green"))
     print(yellow("This message is Yellow"))

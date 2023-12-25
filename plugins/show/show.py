@@ -5,9 +5,10 @@ import re
 from datetime import timedelta
 
 import requests_cache
+import coloredlogs
 
 
-coloredlogs.install(level="INFO", logger=logger, fmt="%(levelname)s: %(message)s")
+coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 '''Process a TV Show File'''

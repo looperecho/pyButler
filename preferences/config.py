@@ -1,10 +1,10 @@
 import json
 import os
 import logging
-import coloredlogs
 
 import requests
 from dotenv import load_dotenv, set_key
+import coloredlogs
 
 from preferences import paths, style
 
@@ -84,16 +84,17 @@ class Config:
             }
         
         self.write(new_configs)
-        return new_configs
+        self.load()
 
 
     def display(self):
         if self.configs:
+            config_msg = style.dark(f"Config  → {self.config_file}")
             source_msg = style.bold(f"Source 	→ {self.configs['source']}")
             movie_msg = f"Movies 	→ {self.configs['movie']}"
             shows_msg = f"Shows 	→ {self.configs['show']}"
             books_msg = f"Books 	→ {self.configs['audiobook']}"
-            print(f"{source_msg}\n{movie_msg}\n{shows_msg}\n{books_msg}")
+            print(f"{config_msg}\n{source_msg}\n{movie_msg}\n{shows_msg}\n{books_msg}")
         else:
             e = "Configs not loaded or invalid"
             self.logger.error(e)
@@ -146,7 +147,7 @@ class Auth:
 
     def create(self):
         with open(self.auth_file, 'w+'):
-            self.logger.error("No key found!")
+            self.logger.error("No TMDB API key found!")
             self.input()
             self.validate()
 

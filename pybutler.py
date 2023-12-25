@@ -14,7 +14,12 @@ from plugins.audiobook import audiobook
 
 
 def welcome_message():
-    print("WELCOME")
+    logo_art = style.logo()
+    version = "1.0"
+    hr = style.hr()
+    tagline = style.blue("Automatic organisation for your media files.")
+    card = f"{logo_art}\nv{version}\n{tagline}{hr}"
+    print(card)
 
 
 def setup_logging():
@@ -96,14 +101,20 @@ def process_file(file_path, api_key, configs):
 
 
 def main():
+    # Setup Logging
     logger = setup_logging()
 
+    # Setup TMDB API Key
     api = config.Auth()
+
+    # Setup config / paths to directories
     prefs = config.Config()
 
+    # Read the directories
     configs = prefs.read()
     
     welcome_message()
+    prefs.display()
 
     input(f"\nPress {style.bold('ENTER')} to start...")
     count = 0
