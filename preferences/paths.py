@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 from sys import platform
-import sys
 
 
 def app():
@@ -44,7 +43,7 @@ def setup_dirs(configs):
             os.mkdir(dir_path)
         except FileExistsError:
             exist_msg = f"Directory exists! {dir_path}"
-            print(f"{style.dark(exist_msg)}")
+            print(f"{exist_msg}")
         else:
             print(f"Directory created → {dir_path}")
 

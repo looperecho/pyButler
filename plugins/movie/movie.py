@@ -7,6 +7,9 @@ from datetime import timedelta
 import requests_cache
 
 
+coloredlogs.install(level="INFO", logger=logger, fmt="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
+
 '''Process a Movie file'''
 #   This can be called from another script with the args.
 def process(file_path, api_key, movie_path):
@@ -17,7 +20,7 @@ def process(file_path, api_key, movie_path):
     try:
         movie_name, movie_year = get_movie_info(file_name, api_key)
     except TypeError:
-        logging.error("Movie information returned no results. Please check the title and year is correct.")
+        logger.error("Movie information returned no results. Please check the title and year is correct.")
     else:
         new_file_name = rename_movie_file(movie_name, movie_year, ext)
         
@@ -46,7 +49,7 @@ def get_movie_name(file_name):
     if year_match:
         movie_year = year_match[-1]
     else:
-        logging.error("Unable to parse movie year from file name.")
+        logger.error("Unable to parse movie year from file name.")
 
     if movie_year:
         # Use the assigned movie_year in the regex pattern for movie_name
@@ -57,9 +60,9 @@ def get_movie_name(file_name):
             movie_name = movie_name_match.group(1).replace(".", " ")
             return movie_name, movie_year
         else:
-            logging.error("Unable to parse movie name from file name.")
+            logger.error("Unable to parse movie name from file name.")
     else:
-        logging.error(f"Unable to continue for {file_name}.")
+        logger.error(f"Unable to continue for {file_name}.")
 
 
 def get_movie_info(file_name, api_key):

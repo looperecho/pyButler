@@ -1,9 +1,7 @@
 import os
-import json
 import logging
 import re
 import shutil
-from datetime import timedelta
 
 import coloredlogs
 import requests
@@ -18,8 +16,9 @@ from plugins.audiobook import audiobook
 def welcome_message():
     print("WELCOME")
 
+
 def setup_logging():
-    coloredlogs.install(level="INFO", logger=logging.getLogger(), fmt="%(levelname)s: %(message)s")
+    coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s: %(message)s")
 
     # console log setup
     console_handler = logging.StreamHandler()
@@ -32,65 +31,10 @@ def setup_logging():
     file_handler.setFormatter(file_formatter)
 
     # call logger
-    logging.getLogger().addHandler(file_handler)
+    logger = logging.getLogger(__name__)
+    logger.addHandler(file_handler)
 
-    return logging
-
-
-def create_api():
-    # check if .env file exists
-    if not os.path.exists(config.get_env_path()):
-        with open(config.get_env_path(), "w"):
-            logging.warning("TMDB API key not found...")
-        input_api()
-
-    else:
-        print(style.dark("Checking TMDB API..."))
-        check_api_file()
-
-
-def input_api():
-    load_dotenv(config.get_env_path())
-    os.environ["TMDB_API_KEY"] = input("Input a valid TMDB API key: ")
-    set_key(config.get_env_path(), "TMDB_API_KEY", os.environ["TMDB_API_KEY"])
-
-
-def read_api():
-    load_dotenv(config.get_env_path())
-    api_key = os.environ.get("TMDB_API_KEY")
-    return api_key
-
-
-def check_api_file():
-    load_dotenv(config.get_env_path())
-
-    try:
-        api_key = os.environ.get("TMDB_API_KEY")
-        if api_key is None:
-            raise ValueError ("TMDB API ket not found...")
-
-    except ValueError as e:
-        logging.warning(e)
-        input_api()
-
-
-def check_api_key():
-    create_api()
-
-    while True:
-        api_key = read_api()
-        api_test_url = f"https://api.themoviedb.org/3/movie/550?api_key={api_key}"
-
-        response = requests.get(api_test_url)
-
-        if response.status_code == 200:
-            print(style.green("TMDB API Check: OK!"))
-            return api_key
-
-        else:
-            status_message = response.json()["status_message"]
-            logging.warning(status_message)
-            input_api()
+    return logger
 
 
 def move_file(file_path, new_path):
@@ -100,7 +44,7 @@ def move_file(file_path, new_path):
         shutil.move(file_path, new_path)
         
     except (OSError, TypeError) as e:
-        logging.error(e)
+        logger.error(e)
         
     else:
         check_file(new_path)
@@ -117,68 +61,67 @@ def check_file(new_path):
         print(f"{success} {msg} → {location} → {filename}")
 
 # MAIN FUNCTION - Call from another script using the args
-def process_file(file_path, api_key, prefs):
+def process_file(file_path, api_key, configs):
     file_name = os.path.basename(file_path)
     extension = os.path.splitext(file_path)[1]
     pattern = re.search("(?i)(S(\d+))(E(\d+))", file_name, re.IGNORECASE)
 
     if extension != '.mkv' and extension != '.mp4' and extension !='.m4b':
-        logging.info(f"{extension} is not a valid file type for pyButler to process. Skipping file...")
+        logger.info(f"{extension} is not a valid file type for pyButler to process. Skipping file...")
         pass
 
     elif extension == '.m4b':
         try:
-            new_path = audiobook.process(file_path, book_path=prefs.configs['audiobook'])
+            new_path = audiobook.process(file_path, book_path=configs['audiobook'])
             move_file(file_path, new_path)
         except UnboundLocalError:
-            logging.info("Skipping file...")
+            logger.info("Skipping file...")
             pass
         
     elif pattern is not None:
         try:
-            new_path = show.process(file_path, api_key, show_path=prefs.configs['show'])
+            new_path = show.process(file_path, api_key, show_path=configs['show'])
             move_file(file_path, new_path)
         except UnboundLocalError:
-            logging.info("Skipping file...")
+            logger.info("Skipping file...")
             pass
         
     else:
         try:
-            new_path = movie.process(file_path, api_key, movie_path=prefs.configs['movie'])
+            new_path = movie.process(file_path, api_key, movie_path=configs['movie'])
             move_file(file_path, new_path)
         except UnboundLocalError:
-            logging.info("Skipping file...")
+            logger.info("Skipping file...")
             pass
 
 
 def main():
+    logger = setup_logging()
+
     api = config.Auth()
     prefs = config.Config()
-    logging = setup_logging()
 
-
-    source = prefs.configs['source']
-    print(source)
-
+    configs = prefs.read()
+    
     welcome_message()
 
     input(f"\nPress {style.bold('ENTER')} to start...")
     count = 0
 
-    for file in os.listdir(prefs.configs['source']):
-        file_path = os.path.join(prefs.configs['source'], file)
+    for file in os.listdir(configs['source']):
+        file_path = os.path.join(configs['source'], file)
         extension = extension = os.path.splitext(file)[1]
         
         if extension == '.mkv' or extension == '.mp4' or extension =='.m4b':
             print (f"\nFile: {style.bold(style.dark_grey(file))}")
-            process_file(file_path, api.key, prefs)
+            process_file(file_path, api.key, configs)
             count += 1
             
         else:
             pass
 
     if count < 1:
-        logging.info("No valid files were found!")
+        logger.info("No valid files were found!")
     else:
         print(f"\n{style.blue('Complete.')}")
 

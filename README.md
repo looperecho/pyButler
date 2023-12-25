@@ -40,6 +40,7 @@ pip install -r requirements.txt
 python /path/to/pybutler.py
 ```
 2. Follow the on-screen prompts to input your TMDB API key and setup your directory preferences.
+3. pyButler will scan the source directory for supported file types, and do the rest!
 
 ## Application Data & Configuration Files
 pyButler will create an application directory along with `config.json` and `.env` files to store your configurations. If you want to edit them at any time, they can be found at:
@@ -73,27 +74,31 @@ Amazing Audiobook (Unabridged).m4b
 I've seperated each processing category into seperate modules that can be easily modified or allows for integration of futher media types in the future.
 pyButler will automatically determin which plugin to call for futher processing.
 
-* **Movie Plugin** → `plugins/movie.py`  
+* **Movie Plugin**
 The movie plugin is responsible for processing movie files. It uses some regex logic to detirmine the release year and title and fetches futher information about the movie from TMDB and renames the file in the following format:
-> Movie Name (YYYY).ext
+```
+Movie_Directory/Movie Name (YYYY).ext
+```
 
-* **Show Plugin** → `plugins/shows.py`  
+* **Show Plugin**
 Arguably the most useful plugin here. The Show plugin is responsible for naming episodes from TV Shows. It uses regex to determine the show name, year, and episode and season numbers to fetch all information from TMDB (including episode title). It then uses this information to rename the file, and create a directory structure to follow the format of popular media server management platforms (such as Plex or Jellyfin)
 The file and directory output is:  
-> Show Name - S00E00 - Episode Title.ext  
-> /Show Name/Season 00/Show Name - S00E00 - Episode Title.ext
+```
+Show_Directory/Show Name/Season 00/Show Name - S00E00 - Episode Title.ext
+```
 
-* **Audiobook Plugin** → `plugins/audiobook/py`  
+* **Audiobook Plugin**
 This one is pretty basic, as it doesn't leverage any 3rd party databases, but relies on ID3 tags being present in the file already. It will remove the term `(Unabridged)` if present, then create a directory based on the authors name, and rename the file as follows:
-> Audiobook Title.m4b  
-> Author/Audiobook Title.m4b  
+```
+Audiobook_Directory/Author/Audiobook Title.m4b
+```
 
 
 ## Support
 I can offer limited support, but this script isn't very complex anyway. However if you do find any bugs etc. Please create an issue on the GitHub repository.
 
 ## Note
-Initially I wrote this for myself, to run on a headless server, with a goal to improving my python knowledge whilst making something usefull at the same time. I know a lot of other similar applications exist out there, but feel free to use it and drop any suggestions for improvements if you feel like it. I had a lot of fun making this, and learned a lot of new things along the way. Thanks for reading!
+Initially I wrote this for myself to run on a headless server, with a goal to improving my python knowledge whilst making something usefull at the same time. I know a lot of other similar applications exist out there, but feel free to use it and drop any suggestions for improvements if you feel like it. I had a lot of fun making this, and learned a lot of new things along the way. Thanks for reading!
 
 ### To Do Plans
 * Improve `audiobook.py`
@@ -102,4 +107,6 @@ Initially I wrote this for myself, to run on a headless server, with a goal to i
 * Add more options for directory structure in `movie.py`
 	* Organise by genre or simply giving the movie file it's own sub-directory
 	* Add resolution to the end of the filename
-* Package the script for easier distro and real CLI arguments
+* Package the script for better distro and real CLI arguments
+    * Add a toggle option to automatically create user set directories, if they do not exist
+    * Add the ability to edit particular directories that have been set, rather than having going through to set them all at once

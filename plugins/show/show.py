@@ -7,6 +7,9 @@ from datetime import timedelta
 import requests_cache
 
 
+coloredlogs.install(level="INFO", logger=logger, fmt="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
+
 '''Process a TV Show File'''
 #   This can be called from another script with the args.
 def process(file_path, api_key, show_path):
@@ -17,7 +20,7 @@ def process(file_path, api_key, show_path):
     try:
         show_name, show_year, season_num, episode_num, episode_title = get_show_info(file_name, api_key)
     except TypeError:
-        logging.error(f"Show information returned no results. Please check the title and year is correct.")
+        logger.error(f"Show information returned no results. Please check the title and year is correct.")
     else:
         # Create dirs and rename file
         season_dir = create_show_dirs(show_name, show_year, season_num, show_path)
@@ -59,7 +62,7 @@ def get_show_name(file_name):
         show_name = (show_name_search.group(1)).strip()
 
     else:
-        logging.error("Unable to parse show title from file name.")
+        logger.error("Unable to parse show title from file name.")
     
     # Check for dots and replace
     re_dots = re.search("\.", show_name)
@@ -145,7 +148,7 @@ def get_episode_title(show_id, season_num, episode_num, api_key):
 
     # Episode Check
     if episode_info.get("success") == False:
-        logging.error("Show results were found but season or epiosde numbers may be wrong.")
+        logger.error("Show results were found but season or epiosde numbers may be wrong.")
         episode_title = ""
 
     else:

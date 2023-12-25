@@ -1,8 +1,13 @@
 import os
 import re
 import logging
+import coloredlogs
 
 from mutagen.mp4 import MP4
+
+
+coloredlogs.install(level="INFO", logger=logger, fmt="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
 
 # Remove undesired term from title
 def remove_unabridged(title):
@@ -31,7 +36,7 @@ def process(file_path, target):
 		audio.save()
 
 	except:
-		logging.error("Not a .mp4 file. Please check this is a real!")
+		logger.error("Not a .mp4 file. Please check this is a real!")
 
 	author_folder = os.path.join(target, author)
 	if not os.path.exists(author_folder):

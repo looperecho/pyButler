@@ -1,6 +1,7 @@
 import json
 import os
-from pathlib import Path
+import logging
+import coloredlogs
 
 import requests
 from dotenv import load_dotenv, set_key
@@ -9,15 +10,24 @@ from preferences import paths, style
 
 
 class Config:
-    def __init__(self, config_file=paths.config_file()):
+    def __init__(self, config_file=paths.config_file(), logger=logging.getLogger(__name__)):
+        
+        coloredlogs.install(level="INFO", logger=logger, fmt="%(levelname)s: %(message)s")
+        self.logger = logger
+        
         self.config_file = config_file
         self.configs = self.load()
 
+
+    def read(self):
+        with open(self.config_file, 'r') as file:
+            configs = json.load(file)
+            return configs
+
+
     def load(self):
         if self.validate(): # Check the contents first
-            with open(self.config_file, 'r') as file:
-                valid_configs = json.load(file)
-                return valid_configs
+            return self.read()
 
 
     def validate(self):
@@ -28,12 +38,12 @@ class Config:
                     for key, directory in temp_configs.items():
                         while not os.path.isdir(directory):
                             e = f"{key} directory does not exist or is not valid: {directory}"
-                            logging.error(e)
+                            self.logger.error(e)
 
                             new_directory = input(f"Please enter a valid directory for {key}: ")
                             temp_configs[key] = new_directory
                             directory = new_directory
-                            logging.info(f"Updated {key} to: {new_directory}")
+                            self.logger.info(f"Updated {key} to: {new_directory}")
                     
                     self.write(temp_configs)
 
@@ -42,15 +52,15 @@ class Config:
 
             except json.JSONDecodeError:
                 e = "Unable to read the contents of the config file"
-                logging.error(e)
+                self.logger.error(e)
                 return False
             except Exception as e:
                 e = f"Unexpected error: {e}"
-                logging.error(e)
+                self.logger.error(e)
                 return False
         else:
             e = "No config file found"
-            logging.error(e)
+            self.logger.error(e)
             self.create()
 
 
@@ -74,7 +84,6 @@ class Config:
             }
         
         self.write(new_configs)
-        self.configs = new_configs
         return new_configs
 
 
@@ -87,11 +96,15 @@ class Config:
             print(f"{source_msg}\n{movie_msg}\n{shows_msg}\n{books_msg}")
         else:
             e = "Configs not loaded or invalid"
-            logging.error(e)
+            self.logger.error(e)
 
 
 class Auth:
-    def __init__(self, auth_file=paths.auth_file()):
+    def __init__(self, auth_file=paths.auth_file(), logger=logging.getLogger(__name__)):
+
+        coloredlogs.install(level="INFO", logger=logger, fmt="%(levelname)s: %(message)s")
+        self.logger = logger
+
         self.auth_file = auth_file
         self.key = self.load()
 
@@ -123,7 +136,7 @@ class Auth:
 
                     else:
                         status_message = response.json()['status_message']
-                        logging.warning(status_message)
+                        self.logger.warning(status_message)
                         self.input()
                 else:
                     self.input()
@@ -133,7 +146,7 @@ class Auth:
 
     def create(self):
         with open(self.auth_file, 'w+'):
-            logging.warning("No key found!")
+            self.logger.error("No key found!")
             self.input()
             self.validate()
 
