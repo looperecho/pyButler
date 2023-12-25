@@ -1,0 +1,17 @@
+attrs==23.1.0
+cattrs==23.2.3
+certifi==2023.11.17
+charset-normalizer==3.3.2
+coloredlogs==15.0.1
+humanfriendly==10.0
+idna==3.6
+mutagen==1.47.0
+platformdirs==4.1.0
+pyreadline3==3.4.1
+python-dotenv==1.0.0
+requests==2.31.0
+requests-cache==1.1.1
+six==1.16.0
+termcolor==2.4.0
+url-normalize==1.4.3
+urllib3==2.1.0
