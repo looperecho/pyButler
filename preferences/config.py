@@ -2,6 +2,7 @@ import json
 import os
 
 import requests
+import getpass
 from dotenv import load_dotenv, set_key
 
 from preferences import paths, logging, style
@@ -133,24 +134,25 @@ class Auth:
 
                     else:
                         status_message = response.json()['status_message']
-                        self.logger.warning(status_message)
+                        self.logger.error(status_message)
                         self.input()
                 else:
+                    self.logger.warning("No TMDB API key found!")
                     self.input()
         else:
+            self.logger.warning("No TMDB API key found!")
             self.create()
 
 
     def create(self):
         with open(self.auth_file, 'w+'):
-            self.logger.error("No TMDB API key found!")
             self.input()
             self.validate()
 
 
     def input(self):
         load_dotenv(self.auth_file)
-        os.environ['tmdb_api_key'] = input("Please input a valid TMDB API key: ")
+        os.environ['tmdb_api_key'] = getpass.getpass("Please input a valid TMDB API key: ")
         set_key(self.auth_file, 'tmdb_api_key', os.environ['tmdb_api_key'])
 
 
