@@ -1,18 +1,15 @@
 import json
 import os
-import logging
 
 import requests
 from dotenv import load_dotenv, set_key
-import coloredlogs
 
-from preferences import paths, style
+from preferences import paths, logging, style
 
 
 class Config:
-    def __init__(self, config_file=paths.config_file(), logger=logging.getLogger(__name__)):
+    def __init__(self, config_file=paths.config_file(), logger=logging.setup()):
         
-        coloredlogs.install(level="INFO", logger=logger, fmt="%(levelname)s: %(message)s")
         self.logger = logger
         
         self.config_file = config_file
@@ -101,9 +98,8 @@ class Config:
 
 
 class Auth:
-    def __init__(self, auth_file=paths.auth_file(), logger=logging.getLogger(__name__)):
+    def __init__(self, auth_file=paths.auth_file(), logger=logging.setup()):
 
-        coloredlogs.install(level="INFO", logger=logger, fmt="%(levelname)s: %(message)s")
         self.logger = logger
 
         self.auth_file = auth_file

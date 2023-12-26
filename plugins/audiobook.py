@@ -1,13 +1,11 @@
 import os
 import re
-import logging
 
 from mutagen.mp4 import MP4
-import coloredlogs
+from preferences import logging
 
 
-coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s: %(message)s")
-logger = logging.getLogger(__name__)
+logger = logging.setup()
 
 # Remove undesired term from title
 def remove_unabridged(title):

@@ -1,14 +1,9 @@
 import os
-import logging
 import re
 import shutil
 import sys
 
-import coloredlogs
-import requests
-from dotenv import load_dotenv, set_key
-
-from preferences import paths, config, style
+from preferences import logging, config, style
 from plugins import audiobook, movie, show
 
 
@@ -26,26 +21,6 @@ def warn():
     compatable = f"Supported: {style.bold('.mkv .mp4 .m4b')}"
     warning_message = f"\n{message}\n{compatable}"
     print(warning_message)
-
-
-def setup_logging():
-    coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s: %(message)s")
-
-    # console log setup
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-
-    # file logs setup
-    file_handler = logging.FileHandler(os.path.join(paths.app(), 'log_errors.log'))
-    file_handler.setLevel(logging.ERROR)
-    file_formatter = logging.Formatter("---\n%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
-    file_handler.setFormatter(file_formatter)
-
-    # call logger
-    logger = logging.getLogger(__name__)
-    logger.addHandler(file_handler)
-
-    return logger
 
 
 def move_file(file_path, new_path):
@@ -152,5 +127,5 @@ def main():
 #   Solo Run.
 if __name__ == "__main__":
     # Setup Logging
-    logger = setup_logging()
+    logger = logging.setup()
     main()

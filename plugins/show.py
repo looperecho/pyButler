@@ -1,15 +1,13 @@
 import json
-import logging
 import os
 import re
 from datetime import timedelta
 
 import requests_cache
-import coloredlogs
+from preferences import logging
 
 
-coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s: %(message)s")
-logger = logging.getLogger(__name__)
+logger = logging.setup()
 
 '''Process a TV Show File'''
 #   This can be called from another script with the args.
