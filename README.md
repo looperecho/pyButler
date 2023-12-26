@@ -12,6 +12,7 @@ pyButler is a Python command line application designed for the automatic organiz
 7. [Support & Notes](#support)
 8. [To Do](#to-do-plans)
 
+
 ## Features
 * Automatic organization of TV show, movie and audiobook files.
 * Utilizes TMDB API for fetching movie and TV show information.
@@ -44,6 +45,7 @@ $ python pybutler.py
 3. pyButler will scan the source directory for supported file types, and do the rest!  
 > Supported filetypes: `.mkv` `.mp4` `.m4b`
 
+
 ## Application Data & Configuration Files
 pyButler will create an application directory along with `config.json` and `.env` files to store your configurations. If you want to edit them at any time, they can be found at:
 * Linux
@@ -59,6 +61,7 @@ pyButler will create an application directory along with `config.json` and `.env
 C:\Users\user\AppData\Roaming\pyButler
 ```
 
+
 ## File Processing
 pyButler processes files based on their extensions. After the intial setup and on subsequent runs, pyButler will scan your source directory for the supported file types. Currently supported file types are .mkv, .mp4, and .m4b.
 The script automatically renames these files using information obtained from the TMDB API. As long as your source files have some information in them, such as movie name, year, tv show season number and episode number, it should be able to determine the correct media.  
@@ -71,6 +74,7 @@ some movie title 2017.mkv
 movie.title.sequel.2018.mkv
 Amazing Audiobook (Unabridged).m4b
 ```
+
 
 ## Plugins
 I've seperated each processing category into seperate modules that can be easily modified or allows for integration of futher media types in the future.
@@ -100,8 +104,10 @@ Audiobook_Directory/Author/Audiobook Title.m4b
 ## Support
 I can offer limited support, but this script isn't very complex anyway. However if you do find any bugs etc. Please create an issue on the GitHub repository.
 
-## Note
+
+## Notes
 Initially I wrote this for myself to run on a headless server, with a goal to improving my python knowledge whilst making something usefull at the same time. I know a lot of other similar applications exist out there, but feel free to use it and drop any suggestions for improvements if you feel like it. I had a lot of fun making this, and learned a lot of new things along the way. Thanks for reading!
+
 
 ### To Do Plans
 * `audiobook.py`
