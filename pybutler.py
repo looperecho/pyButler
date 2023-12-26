@@ -9,9 +9,7 @@ import requests
 from dotenv import load_dotenv, set_key
 
 from preferences import paths, config, style
-from plugins.movie import movie
-from plugins.show import show
-from plugins.audiobook import audiobook
+from plugins import audiobook, movie, show
 
 
 def welcome_message():
@@ -22,11 +20,13 @@ def welcome_message():
     card = f"{logo_art}\nv{version}\n{tagline}{hr}"
     print(card)
 
+
 def warn():
     message = style.yellow("! pyButler will perform file operations that include moving and renaming compatable files. It's advisable to have a backup.")
     compatable = "Compatable Files: .mkv, .mp4, & .m4b"
     warning_message = f"\n{message}\n{compatable}\n"
     print(warning_message)
+
 
 def setup_logging():
     coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s: %(message)s")
