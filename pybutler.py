@@ -22,9 +22,9 @@ def welcome_message():
 
 
 def warn():
-    message = style.yellow("! pyButler will perform file operations that include moving and renaming compatable files. It's advisable to have a backup.")
-    compatable = "Compatable Files: .mkv, .mp4, & .m4b"
-    warning_message = f"\n{message}\n{compatable}\n"
+    message = style.yellow("PLEASE READ: pyButler will perform file operations that include moving and renaming supported file types. It's advisable to have a backup.")
+    compatable = f"Supported: {style.bold('.mkv .mp4 .m4b')}"
+    warning_message = f"\n{message}\n{compatable}"
     print(warning_message)
 
 
