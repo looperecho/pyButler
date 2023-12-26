@@ -46,4 +46,3 @@ def setup_dirs(configs):
             print(f"{exist_msg}")
         else:
             print(f"Directory created → {dir_path}")
-
