@@ -36,7 +36,7 @@ def get_file_extension(file_name):
 
 def format_movie_name(file_name):
 	file_name = file_name.replace('(', '').replace(')', '')
-	# Replace spaces with dots
+	# Replace spaces with dots for consistent formatting, important later when using regex.
 	file_name = file_name.replace(' ', '.')
 	return file_name
 
@@ -56,6 +56,7 @@ def get_movie_name(file_name):
         movie_name_match = movie_name_pattern.search(file_name)
 
         if movie_name_match:
+            # Replace the dots with spaces not
             movie_name = movie_name_match.group(1).replace(".", " ")
             return movie_name, movie_year
         else:
@@ -77,14 +78,15 @@ def get_movie_info(file_name, api_key):
             # Return top result
             info = search_results[0]
 
-            # parse these results to get proper movie info
+            # Parse these results to get properly formatted movie info
             movie_name, movie_year = parse_movie_info(info)
             return movie_name, movie_year
 
 
 def parse_movie_info(info):
+    # Replace colon with dash
     movie_name = remove_colon(info["title"])
-    # Remove invalid chars
+    # Remove further invalid chars
     invalid_chars = "\\/:*`‘’“”?!\"<>|"
     trans = str.maketrans("", "", invalid_chars)
     movie_name = movie_name.translate(trans)
@@ -104,4 +106,5 @@ def rename_movie_file(movie_name, movie_year, ext):
 
 
 if __name__ == '__main__':
+    # Will add some input functions here to be ran seperately if desired.
     print("Please run 'butler.py'")

@@ -38,9 +38,8 @@ def get_file_extension(file_name):
 
 def check_for_year(file_name):
     show_name = ""
-    
+    # Most don't have the year, so likely will return None
     show_search = re.search("(.*)((\(|\.)([0-9]{4})(\)|\.))", file_name)
-    # (^.*)(?=S\d+) <--- old reg-ex pattern
     
     if show_search is not None:
         show_name = (show_search.group(1)).strip()
@@ -79,24 +78,24 @@ def get_show_name(file_name):
 
 
 def get_season_num(file_name):
+    # Paste the season number
     season_search = re.search("(?i)(S(\d+))(E(\d+))", file_name, re.IGNORECASE)
     season_num = season_search.group(2)
     return season_num
 
 
 def get_episode_num(file_name):
+    # Parse the episode number
     episode_search = re.search("(?i)(S(\d+))(E(\d+))", file_name, re.IGNORECASE)
     episode_num = episode_search.group(4)
     return episode_num
 
-
+# Replace colon with adash
 def remove_colon(source_info):
     source_info = source_info.replace(": ", " - ")
     return source_info
 
-
-#   This function calls the others to get_show_name, season_num, episode_num, episode_title 
-#   and returns them all to process_file. Most of the flow of information happens here.
+# Query TMDB
 def get_show_info(file_name, api_key):
     
     show_name, show_year = check_for_year(file_name)
@@ -184,4 +183,5 @@ def rename_show_file(show_name, season_num, episode_num, episode_title, ext):
 
 
 if __name__ == '__main__':
+    # Will add some input functions here to be ran seperately if desired.
     print("Please run 'butler.py'")

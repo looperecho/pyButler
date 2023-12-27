@@ -33,7 +33,7 @@ def process(file_path, book_path):
 		audio['\xa9nam'] = tag_title # title tag
 		audio.save()
 
-	except:
+	except: # Should be MP4somethingERROR, but would require a broader import from mutagen
 		logger.error("Not a .mp4 file. Please check this is a real!")
 
 	author_folder = os.path.join(book_path, author)
@@ -44,4 +44,5 @@ def process(file_path, book_path):
 
 
 if __name__ == '__main__':
+	# Will add some input functions here to be ran seperately if desired.
     print("Please run 'butler.py'")

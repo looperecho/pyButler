@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from sys import platform
 
-
+# Check OS platform and assign the pyButler directory accordingly
 def app():
     if platform == 'linux': # Linux
         app_dir = Path.home() / '.config' / 'pyButler'
@@ -22,11 +22,11 @@ def app():
 
 # return the path of config.json
 def config_file():
-    app_dir = app() # Get the Application Support directory of pyButler.
+    app_dir = app()
     config_path = app_dir / 'config.json'
     return config_path
 
-
+# return the path of .env file (used for api key)
 def auth_file():
     app_dir = app()
     auth_path = app_dir / '.env'

@@ -60,10 +60,12 @@ def logo():
     logo_art = blue(logo_art)
     return logo_art
 
+
 def hr():
     hr = "\n───────────────────────────────────────────────────────────────────\n"
     hr = blue(hr)
     return hr
+
 
 def test():
     Option = input("Please run 'butler.py'\nPress 'Enter' to run a color test... ")

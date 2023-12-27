@@ -34,7 +34,7 @@ def move_file(file_path, new_path):
     else:
         check_file(new_path)
 
-
+# Make sure the new_file made it to the destination folder after `move_file()`
 def check_file(new_path):
     if os.path.exists(new_path):
         msg = "File processed"
@@ -54,7 +54,8 @@ def process_file(file_path, api_key, configs):
     if extension != '.mkv' and extension != '.mp4' and extension !='.m4b':
         logger.info(f"{extension} is not a valid file type for pyButler to process. Skipping file...")
         pass
-
+    
+    # m4b must be an audiobook file
     elif extension == '.m4b':
         try:
             new_path = audiobook.process(file_path, book_path=configs['audiobook'])
@@ -62,17 +63,19 @@ def process_file(file_path, api_key, configs):
         except UnboundLocalError:
             logger.info("Skipping file...")
             pass
-        
+
+    # Figure out if the video file is a TV show or not
     elif pattern is not None:
-        try:
+        try: 
             new_path = show.process(file_path, api_key, show_path=configs['show'])
             move_file(file_path, new_path)
         except UnboundLocalError:
             logger.info("Skipping file...")
             pass
-        
+    
+    # Conclude at this point, the file must be a movie
     else:
-        try:
+        try: 
             new_path = movie.process(file_path, api_key, movie_path=configs['movie'])
             move_file(file_path, new_path)
         except UnboundLocalError:
@@ -91,7 +94,7 @@ def main():
         # Setup config / paths to directories
         prefs = config.Config()
 
-        # Read the directories
+        # Read the directories from config file
         configs = prefs.read()
 
         # Display logo card
@@ -105,7 +108,8 @@ def main():
         for file in os.listdir(configs['source']):
             file_path = os.path.join(configs['source'], file)
             extension = extension = os.path.splitext(file)[1]
-            
+
+            # Quick and dirty check for supported file types
             if extension == '.mkv' or extension == '.mp4' or extension =='.m4b':
                 print (f"\nFile: {style.bold(style.dark_grey(file))}")
                 process_file(file_path, api.key, configs)
@@ -116,15 +120,20 @@ def main():
 
         if count < 1:
             logger.info("No valid files were found!")
+
         else:
             print(f"\n{style.blue('Complete.')}")
-    except KeyboardInterrupt:
+
+    # Ctrl + C handling
+    except KeyboardInterrupt: 
             print('')
             logger.info("pyButler interrupted by user. Exiting app..")
             sys.exit(0)
 
 #   Solo Run.
 if __name__ == "__main__":
-    # Setup Logging
+    # Setup logging on the outside
     logger = logging.setup()
+
+    # Run
     main()
