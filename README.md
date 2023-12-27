@@ -121,12 +121,13 @@ Initially I wrote this for myself to run on a headless server, with a goal to im
 
 ### To Do Plans
 * `audiobook.py`
-	* Add authors name to the file
-	* Futher add subdirectories for series (and add those to the filename)
+	- [ ] Add authors name to the file
+	- [ ] Futher add subdirectories for series (and add those to the filename)
 * `movie.py`  
-	* Add options for organisation preferences 
-	* Organise by genre or simply giving the movie file it's own sub-directory
-	* Add resolution to the end of the filename
+	- [ ] Add options for organisation preferences 
+	- [ ] Organise by genre or simply giving the movie file it's own sub-directory
+	- [ ] Add resolution to the end of the filename
 * Package the script for better distro and real CLI arguments (or maybe a TUI?)
-    * Add a toggle option to automatically create user set directories, if they do not exist
-    * Add the ability to edit particular directories that have been set, rather than having going through to set them all at once
+    - [ ] Add a toggle option to automatically create user set directories, if they do not exist
+    - [ ] Add the ability to edit particular directories that have been set, rather than having going through to set them all at once  
+    
