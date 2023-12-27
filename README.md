@@ -68,11 +68,12 @@ The script automatically renames these files using information obtained from the
 Examples of file names could be:
 
 ```
-episode.of.a.show.s01e01.mkv
-episode of a show s01e02.mkv
-some movie title 2017.mkv
-movie.title.sequel.2018.mkv
-Amazing Audiobook (Unabridged).m4b
+Source_Directory
+    ├── cool.tv.show.s01e01.mkv
+    ├── cool tv show s02e01.mkv
+    ├── some movie title 2017.mkv
+    ├── movie.title.sequel.2018.mkv
+    └── Amazing Audiobook (Unabridged).m4b
 ```
 
 
@@ -83,21 +84,30 @@ pyButler will automatically determin which plugin to call for futher processing.
 * **Movie Plugin**  
 The movie plugin is responsible for processing movie files. It uses some regex logic to detirmine the release year and title and fetches futher information about the movie from TMDB and renames the file in the following format:
 ```
-Movie_Directory/Movie Name (YYYY).ext
+Movie_Directory
+    ├── Some Movie Title (2017).ext
+    └── Movie Title Sqeuel (2018).ext
 ```
 
 * **Show Plugin**  
 Arguably the most useful plugin here. The Show plugin is responsible for naming episodes from TV Shows. It uses regex to determine the show name, year, and episode and season numbers to fetch all information from TMDB (including episode title). It then uses this information to rename the file, and create a directory structure to follow the format of popular media server management platforms (such as Plex or Jellyfin)
 The file and directory output is:  
 ```
-Show_Directory/Show Name/Season 00/Show Name - S00E00 - Episode Title.ext
+Show_Directory
+    └── Cool TV Show
+        ├── Season 01
+        │   └── Cool TV Show - S01E01 - Episode Title.ext
+        └── Season 02
+            └── Cool TV Show - S02E01 - Episode Title.ext
 ```
 
 * **Audiobook Plugin**  
 This one is pretty basic, as it doesn't leverage any 3rd party databases, but relies on ID3 tags being present in the file already, (due to the fact that I couldnt not find any realiable databses to leverage). It is designed for single-file audiobooks, not those that have a seperate file for each chapter.
 It will remove the term `(Unabridged)` if present, then create a directory based on the authors name, and rename the file as follows:
 ```
-Audiobook_Directory/Author/Audiobook Title.m4b
+Audiobook_Directory
+    └── Author
+        └── Amazing Audiobook.m4b
 ```
 
 
