@@ -131,9 +131,17 @@ def get_show_info(file_name, api_key):
 def parse_show_info(info):
     show_id = info["id"]
     show_name = remove_colon(info["name"])
+    show_name = remove_invalid_chars(show_name)
     show_year = info["first_air_date"].split("-")[0]
 
     return show_id, show_name, show_year
+
+
+def remove_invalid_chars(input):
+    invalid_chars = "\\/:*`‘’“”?!\"<>|"
+    trans = str.maketrans("", "", invalid_chars)
+    output = input.translate(trans)
+    return output
 
 
 def get_episode_title(show_id, season_num, episode_num, api_key):
@@ -154,9 +162,7 @@ def get_episode_title(show_id, season_num, episode_num, api_key):
         episode_title = episode_info["name"]
 
         # Remove invalid chars
-        invalid_chars = "\\/:*`‘’“”?!\"<>|"
-        trans = str.maketrans("", "", invalid_chars)
-        episode_title = episode_title.translate(trans)
+        episode_title = remove_invalid_chars(episode_title)
     
     return episode_title
 
