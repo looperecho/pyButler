@@ -39,7 +39,7 @@ def get_file_extension(file_name):
 def check_for_year(file_name):
     show_name = ""
     # Most don't have the year, so likely will return None
-    show_search = re.search("(.*)((\(|\.)([0-9]{4})(\)|\.))", file_name)
+    show_search = re.search("(.*)((\(|\.)([0-9]{4})(\)|\.))(?=S\d+)", file_name)
     
     if show_search is not None:
         show_name = (show_search.group(1)).strip()
@@ -108,7 +108,7 @@ def get_show_info(file_name, api_key):
         search_url = f"https://api.themoviedb.org/3/search/tv?api_key={api_key}&query={show_name}&include_adult=false"
 
     # Cache and fetch results. Call from cache first.
-    session = requests_cache.CachedSession(f"pydown_show_query", use_temp=True, expire_after=timedelta(days=30))
+    session = requests_cache.CachedSession(f"pybutler_show_query", use_temp=True, expire_after=timedelta(days=30))
     search_results = json.loads(session.get(search_url).text)["results"]
 
     if len(search_results) > 0:
@@ -149,7 +149,7 @@ def get_episode_title(show_id, season_num, episode_num, api_key):
     episode_url = f"https://api.themoviedb.org/3/tv/{show_id}/season/{season_num}/episode/{episode_num}?api_key={api_key}&language=en-US"
 
     # Cache and fetch results. Call from cache first.
-    session = requests_cache.CachedSession("pydown_episode_query", use_temp=True, expire_after=timedelta(days=30))
+    session = requests_cache.CachedSession("pybutler_episode_query", use_temp=True, expire_after=timedelta(days=30))
     episode_info = json.loads(session.get(episode_url).text)
 
     # Episode Check

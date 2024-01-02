@@ -71,7 +71,7 @@ def get_movie_info(file_name, api_key):
     search_url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={movie_name}&include_adult=false&year={movie_year}"
 
     # Cache and fetch results. Call from cache first.
-    session = requests_cache.CachedSession(f"pydown_movie_query", use_temp=True, expire_after=timedelta(days=30))
+    session = requests_cache.CachedSession(f"pybutler_movie_query", use_temp=True, expire_after=timedelta(days=30))
     search_results = json.loads(session.get(search_url).text)["results"]
 
     if len(search_results) > 0:
