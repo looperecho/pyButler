@@ -44,12 +44,11 @@ def check_for_year(file_name):
     if show_search is not None:
         show_name = (show_search.group(1)).strip()
         show_year = (show_search.group(4))
-        print(show_year, show_name)
     else:
         show_name = get_show_name(file_name)
         show_year = ""
 
-    return show_name, show_year
+    return clean_show_name(show_name), show_year
 
 
 def get_show_name(file_name):
@@ -61,7 +60,11 @@ def get_show_name(file_name):
 
     else:
         logger.error("Unable to parse show title from file name.")
-    
+
+    return clean_show_name(show_name)
+
+
+def clean_show_name(show_name):
     # Check for dots and replace
     re_dots = re.search("\.", show_name)
     if re_dots is not None:
@@ -74,6 +77,7 @@ def get_show_name(file_name):
         show_name = show_name.replace("-", "")
         show_name = show_name.strip()
 
+    show_name = remove_invalid_chars(show_name)
     return show_name
 
 
