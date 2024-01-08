@@ -39,7 +39,7 @@ def get_file_extension(file_name):
 def check_for_year(file_name):
     show_name = ""
     # Most don't have the year, so likely will return None
-    show_search = re.search("(.*)((\(|\.)([0-9]{4})(\)|\.))(?=S\d+)", file_name)
+    show_search = re.search("(?i)(.*)((\W)([0-9]{4})(\W*))(?=S\d+)", file_name)
     
     if show_search is not None:
         show_name = (show_search.group(1)).strip()
@@ -52,8 +52,7 @@ def check_for_year(file_name):
 
 
 def get_show_name(file_name):
-    # Check if year is present in show name as (YYYY)
-    show_name_search = re.search("(?i)(^.*)(?=S\d+)", file_name)
+    show_name_search = re.search("(?i)(^.*)(S\d+E\d+)", file_name)
 
     if show_name_search is not None:
         show_name = (show_name_search.group(1)).strip()
