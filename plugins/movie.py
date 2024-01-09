@@ -44,7 +44,7 @@ def format_movie_name(file_name):
 def get_movie_name(file_name):
     file_name = format_movie_name(file_name)
     # get movie year
-    year_match = re.findall(r'(19|20\d{2})', file_name)
+    year_match = re.findall(r'(19\d{2}|20\d{2})', file_name)
     if year_match:
         movie_year = year_match[-1]
     else:
