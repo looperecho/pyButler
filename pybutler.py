@@ -38,12 +38,12 @@ def move_file(file_path, new_path):
 def check_file(new_path):
     if os.path.exists(new_path):
         msg = "File processed"
-        success = style.green(style.bold("SUCCESS:"))
+        success = style.green("    ✔")
         location = os.path.dirname(new_path)
         filename = style.bold(os.path.basename(new_path))
 
         style.clear_line()
-        print(f"{success} {msg} → {location} → {filename}")
+        print(f"{success} {msg} ❯❯ {location} ❯❯ {filename}")
 
 # MAIN FUNCTION - Call from another script using the args
 def process_file(file_path, api_key, configs):
