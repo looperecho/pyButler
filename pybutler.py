@@ -43,7 +43,7 @@ def check_file(new_path):
         filename = style.bold(os.path.basename(new_path))
 
         style.clear_line()
-        print(f"{success} {msg} ⯈ {location} ⯈ {filename}")
+        print(f"{success} {msg} | {location} > {filename}")
 
 # MAIN FUNCTION - Call from another script using the args
 def process_file(file_path, api_key, configs):
