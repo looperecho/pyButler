@@ -1,6 +1,6 @@
 attrs==23.1.0
 cattrs==23.2.3
-certifi==2023.11.17
+certifi==2024.07.04
 charset-normalizer==3.3.2
 coloredlogs==15.0.1
 humanfriendly==10.0
