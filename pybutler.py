@@ -17,7 +17,7 @@ def welcome_message():
 
 
 def warn():
-    logger.warning("pyButler will perform file operations that include moving and renaming supported file types. It's advisable to have a backup.")
+    logger.warning("pyButler will move & rename files.\nIt's advisable to have a backup.")
     supported = f"Supported: {style.bold('.mkv .mp4 .m4b')}"
     print(supported)
 
@@ -27,10 +27,10 @@ def move_file(file_path, new_path):
     style.clear_line()
     try:
         shutil.move(file_path, new_path)
-        
+
     except (OSError, TypeError) as e:
         logger.error(e)
-        
+
     else:
         check_file(new_path)
 
@@ -49,12 +49,11 @@ def check_file(new_path):
 def process_file(file_path, api_key, configs):
     file_name = os.path.basename(file_path)
     extension = os.path.splitext(file_path)[1]
-    pattern = re.search("(?i)(S(\d+))(E(\d+))", file_name, re.IGNORECASE)
+    pattern = re.search(r"(?i)(S(\d+))(E(\d+))", file_name, re.IGNORECASE)
 
-    if extension != '.mkv' and extension != '.mp4' and extension !='.m4b':
-        logger.info(f"{extension} is not a valid file type for pyButler to process. Skipping file...")
-        pass
-    
+    if extension in ('.mkv', '.mp4', '.m4b'):
+        logger.info("%s is not a valid file type. Skipping file...", extension)
+
     # m4b must be an audiobook file
     elif extension == '.m4b':
         try:
@@ -62,25 +61,22 @@ def process_file(file_path, api_key, configs):
             move_file(file_path, new_path)
         except UnboundLocalError:
             logger.info("Skipping file...")
-            pass
 
     # Figure out if the video file is a TV show or not
     elif pattern is not None:
-        try: 
+        try:
             new_path = show.process(file_path, api_key, show_path=configs['show'])
             move_file(file_path, new_path)
         except UnboundLocalError:
             logger.info("Skipping file...")
-            pass
-    
+
     # Conclude at this point, the file must be a movie
     else:
-        try: 
+        try:
             new_path = movie.process(file_path, api_key, movie_path=configs['movie'])
             move_file(file_path, new_path)
         except UnboundLocalError:
             logger.info("Skipping file...")
-            pass
 
 
 def main():
@@ -110,11 +106,11 @@ def main():
             extension = extension = os.path.splitext(file)[1]
 
             # Quick and dirty check for supported file types
-            if extension == '.mkv' or extension == '.mp4' or extension =='.m4b':
+            if extension in ('.mkv', '.mp4', '.m4b'):
                 print (f"\nFile: {style.bold(style.dark_grey(file))}")
                 process_file(file_path, api.key, configs)
                 count += 1
-                
+
             else:
                 pass
 
@@ -125,10 +121,10 @@ def main():
             print(f"\n{style.blue('Complete.')}")
 
     # Ctrl + C handling
-    except KeyboardInterrupt: 
-            print('')
-            logger.info("pyButler interrupted by user. Exiting app..")
-            sys.exit(0)
+    except KeyboardInterrupt:
+        print('')
+        logger.info("pyButler interrupted by user. Exiting app..")
+        sys.exit(0)
 
 #   Solo Run.
 if __name__ == "__main__":
