@@ -46,12 +46,12 @@ def check_file(new_path):
         print(f"{success} {msg} | {location} > {filename}")
 
 # MAIN FUNCTION - Call from another script using the args
-def process_file(file_path, api_key, configs):
+def process_file(file_path, api_key, configs, logger):
     file_name = os.path.basename(file_path)
     extension = os.path.splitext(file_path)[1]
     pattern = re.search(r"(?i)(S(\d+))(E(\d+))", file_name, re.IGNORECASE)
 
-    if extension in ('.mkv', '.mp4', '.m4b'):
+    if extension not in ('.mkv', '.mp4', '.m4b'):
         logger.info("%s is not a valid file type. Skipping file...", extension)
 
     # m4b must be an audiobook file
@@ -108,7 +108,7 @@ def main():
             # Quick and dirty check for supported file types
             if extension in ('.mkv', '.mp4', '.m4b'):
                 print (f"\nFile: {style.bold(style.dark_grey(file))}")
-                process_file(file_path, api.key, configs)
+                process_file(file_path, api.key, configs, logger)
                 count += 1
 
             else:
