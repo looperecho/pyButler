@@ -19,7 +19,7 @@ def process(file_path, api_key, show_path):
     try:
         show_name, show_year, season_num, episode_num, episode_title = get_show_info(file_name, api_key)
     except TypeError:
-        logger.error(f"Show information returned no results. Please check the title and year is correct.")
+        logger.error("Show information returned no results. Please check the title and year is correct.")
     else:
         # Create dirs and rename file
         season_dir = create_show_dirs(show_name, show_year, season_num, show_path)
@@ -111,7 +111,7 @@ def get_show_info(file_name, api_key):
         search_url = f"https://api.themoviedb.org/3/search/tv?api_key={api_key}&query={show_name}&include_adult=false"
 
     # Cache and fetch results. Call from cache first.
-    session = requests_cache.CachedSession(f"pybutler_show_query", use_temp=True, expire_after=timedelta(days=30))
+    session = requests_cache.CachedSession("pybutler_show_query", use_temp=True, expire_after=timedelta(days=30))
     search_results = json.loads(session.get(search_url).text)["results"]
 
     if len(search_results) > 0:
@@ -144,6 +144,7 @@ def remove_invalid_chars(input):
     invalid_chars = "\\/:*`‘’“”?!\"<>|"
     trans = str.maketrans("", "", invalid_chars)
     output = input.translate(trans)
+
     return output
 
 
@@ -156,7 +157,7 @@ def get_episode_title(show_id, season_num, episode_num, api_key):
     episode_info = json.loads(session.get(episode_url).text)
 
     # Episode Check
-    if episode_info.get("success") == False:
+    if not episode_info.get("success"):
         logger.error("Show results were found but season or epiosde numbers may be wrong.")
         episode_title = ""
 
