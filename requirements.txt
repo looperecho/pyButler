@@ -11,11 +11,11 @@ mutagen==1.47.0
 platformdirs==4.1.0
 pyreadline3==3.4.1
 python-dotenv==1.0.0
-requests==2.32.3
+requests==2.32.4
 requests-cache==1.1.1
 six==1.16.0
 termcolor==2.4.0
 tqdm==4.66.4
 url-normalize==1.4.3
-urllib3==2.2.2
+urllib3==2.5.0
 yarg==0.1.9
