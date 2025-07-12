@@ -90,10 +90,10 @@ class Config:
     def display(self):
         if self.configs:
             config_msg = style.dark(f"Config  → {self.config_file}")
-            source_msg = style.bold(f"Source 	→ {self.configs['source']}")
-            movie_msg = f"Movies 	→ {self.configs['movie']}"
-            shows_msg = f"Shows 	→ {self.configs['show']}"
-            books_msg = f"Books 	→ {self.configs['audiobook']}"
+            source_msg = style.bold(f"source  → {self.configs['source']}")
+            movie_msg = f"Movies \t→ {self.configs['movie']}"
+            shows_msg = f"Shows \t→ {self.configs['show']}"
+            books_msg = f"Books \t→ {self.configs['audiobook']}"
             print(f"{config_msg}\n{source_msg}\n{movie_msg}\n{shows_msg}\n{books_msg}")
         else:
             e = "Configs not loaded or invalid"
