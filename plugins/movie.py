@@ -10,12 +10,12 @@ from preferences import logging
 logger = logging.setup()
 
 '''Process a Movie file'''
-#   This can be called from another script with the args.
+# This can be called from another script with the args.
 def process(file_path, api_key, movie_path):
     file_name = os.path.basename(file_path)
     ext = get_file_extension(file_name)
     
-	# Search info with TMDB and return vars needed for renaming file.
+    # Search info with TMDB and return vars needed for renaming file.
     try:
         movie_name, movie_year = get_movie_info(file_name, api_key)
     except TypeError:
@@ -35,10 +35,10 @@ def get_file_extension(file_name):
 
 
 def format_movie_name(file_name):
-	file_name = file_name.replace('(', '').replace(')', '')
-	# Replace spaces with dots for consistent formatting, important later when using regex.
-	file_name = file_name.replace(' ', '.')
-	return file_name
+    file_name = file_name.replace('(', '').replace(')', '')
+    # Replace spaces with dots for consistent formatting, important later when using regex.
+    file_name = file_name.replace(' ', '.')
+    return file_name
 
 
 def get_movie_name(file_name):
@@ -71,16 +71,16 @@ def get_movie_info(file_name, api_key):
     search_url = f"https://api.themoviedb.org/3/search/movie?api_key={api_key}&query={movie_name}&include_adult=false&year={movie_year}"
 
     # Cache and fetch results. Call from cache first.
-    session = requests_cache.CachedSession(f"pybutler_movie_query", use_temp=True, expire_after=timedelta(days=30))
+    session = requests_cache.CachedSession("pybutler_movie_query", use_temp=True, expire_after=timedelta(days=30))
     search_results = json.loads(session.get(search_url).text)["results"]
 
     if len(search_results) > 0:
-            # Return top result
-            info = search_results[0]
+        # Return top result
+        info = search_results[0]
 
-            # Parse these results to get properly formatted movie info
-            movie_name, movie_year = parse_movie_info(info)
-            return movie_name, movie_year
+        # Parse these results to get properly formatted movie info
+        movie_name, movie_year = parse_movie_info(info)
+        return movie_name, movie_year
 
 
 def parse_movie_info(info):
