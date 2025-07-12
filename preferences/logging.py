@@ -7,7 +7,7 @@ def setup():
     # Check if the logging has already been configured
     if not logging.root.handlers:
         # Setup a new console logger
-        coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s: %(message)s")
+        coloredlogs.install(level="INFO", logger=logging.getLogger(__name__), fmt="%(levelname)s %(message)s")
 
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.INFO)
