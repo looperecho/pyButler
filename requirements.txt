@@ -17,5 +17,5 @@ six==1.16.0
 termcolor==2.4.0
 tqdm==4.66.4
 url-normalize==1.4.3
-urllib3==2.5.0
+urllib3==2.6.0
 yarg==0.1.9
