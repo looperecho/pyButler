@@ -154,21 +154,17 @@ def get_episode_title(show_id, season_num, episode_num, api_key):
 
     # Cache and fetch results. Call from cache first.
     session = requests_cache.CachedSession("pybutler_episode_query", use_temp=True, expire_after=timedelta(days=30))
-    episode_info = json.loads(session.get(episode_url).text)
+    episode_info = session.get(episode_url).json()
 
+
+    episode_title = episode_info.get("name")
     # Episode Check
-    if not episode_info.get("success"):
-        logger.error("Show results were found but season or epiosde numbers may be wrong.")
-        episode_title = ""
+    if not episode_title:
+        logger.error("Show results were found but season or epiosde numbers may be wrong. No title will be added to the filename.")
+        return ""
 
-    else:
-        # Get episode title from result
-        episode_title = episode_info["name"]
-
-        # Remove invalid chars
-        episode_title = remove_invalid_chars(episode_title)
-    
-    return episode_title
+    # Remove invalid chars
+    return remove_invalid_chars(episode_title)
 
 
 #   Create the show directories. 
