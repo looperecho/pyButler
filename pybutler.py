@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import sys
+import argparse
 
 from preferences import logging, config, style
 from plugins import audiobook, movie, show
@@ -20,6 +21,44 @@ def warn():
     logger.warning("pyButler will move & rename files. It's advisable to have a backup.")
     supported = f"Supported: {style.bold('.mkv .mp4 .m4b')}"
     print(supported)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Automatic media organisation")
+    parser.add_argument(
+        "--auto",
+        action="store_true",
+        help="Run headless mode"
+        )
+    parser.add_argument(
+        "--path",
+        type=str,
+        help="File or directory path to process (overrides source path in settings)"
+        )
+    return parser.parse_args()
+
+
+def resolve_paths(path, fallback_source):
+    def walk_dir(root):
+        files = []
+        for dirpath, _, filenames in os.walk(root):
+            for name in filenames:
+                files.append(os.path.join(dirpath, name))
+        return files
+
+    if path:
+        path = os.path.abspath(path)
+
+        if os.path.isfile(path):
+            return [path]
+
+        elif os.path.isdir(path):
+            return walk_dir(path)
+
+        else:
+            raise FileNotFoundError(f"Path not found: {path}")
+
+    return walk_dir(os.path.abspath(fallback_source))
 
 
 def move_file(file_path, new_path, logger):
@@ -83,6 +122,8 @@ def process_file(file_path, api_key, configs, logger):
 
 def main():
     try:
+        args = parse_args()
+
         # Warning message
         warn()
 
@@ -99,13 +140,24 @@ def main():
         welcome_message()
         prefs.display()
 
-        enter = style.bold("ENTER")
-        input(f"\nPress {enter} to start...")
+        if not args.auto:
+            enter = style.bold("ENTER")
+            input(f"\nPress {enter} to start...")
+
+        try:
+            files = resolve_paths(args.path, configs['source'])
+        except FileNotFoundError as e:
+            logger.error(e)
+            return 1
+
         count = 0
 
-        for file in os.listdir(configs['source']):
-            file_path = os.path.join(configs['source'], file)
-            extension = extension = os.path.splitext(file)[1]
+        for file_path in files:
+            if not os.path.isfile(file_path):
+                continue
+
+            file = os.path.basename(file_path)
+            extension = os.path.splitext(file)[1]
 
             # Quick and dirty check for supported file types
             if extension in ('.mkv', '.mp4', '.m4b'):
@@ -113,14 +165,12 @@ def main():
                 process_file(file_path, api.key, configs, logger)
                 count += 1
 
-            else:
-                pass
-
         if count < 1:
             logger.info("No valid files were found!")
+            return 1
 
-        else:
-            print(f"\n{style.blue('Complete.')}")
+        print(f"\n{style.blue('Complete.')}")
+        return 0
 
     # Ctrl + C handling
     except KeyboardInterrupt:
@@ -130,8 +180,5 @@ def main():
 
 #   Solo Run.
 if __name__ == "__main__":
-    # Setup logging on the outside
     logger = logging.setup()
-
-    # Run
     main()
